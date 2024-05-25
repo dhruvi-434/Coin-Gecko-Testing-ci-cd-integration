@@ -1,0 +1,32 @@
+name: Postman CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Install Newman
+      run: |
+        npm install -g newman
+        npm install -g newman-reporter-htmlextra
+
+    - uses: actions/checkout@v3
+
+    - name: Run Postman Collection
+      run: |
+        newman run CoinGecko.json \
+          --reporters cli,htmlextra \
+          --reporter-htmlextra-export report.html
+
+    - name: Upload Test Reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-reports
+        path: report.html

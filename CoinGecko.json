@@ -1,0 +1,488 @@
+{
+	"info": {
+		"_postman_id": "ff44a60b-9a79-4eb5-8319-8933cea16b05",
+		"name": "Coin Gecko",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "20688674",
+		"_collection_link": "https://blue-robot-398508.postman.co/workspace/New-Team-Workspace~23201a7e-5a27-4a04-9d1a-d5766d5774d6/collection/20688674-ff44a60b-9a79-4eb5-8319-8933cea16b05?action=share&source=collection_link&creator=20688674"
+	},
+	"item": [
+		{
+			"name": "ping",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response contains the expected message\", function () {",
+							"    // Get the response body as JSON",
+							"    const responseJson = pm.response.json();",
+							"    ",
+							"    // Define the expected result as an object",
+							"    const expectedResult = { \"gecko_says\": \"(V3) To the Moon!\" };",
+							"    ",
+							"    // Check if the response JSON matches the expected result",
+							"    pm.expect(responseJson).to.eql(expectedResult);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"packages": {},
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.coingecko.com/api/v3/ping?CG-bMNG2jRAniPj52tQUTbBoSiC",
+					"protocol": "https",
+					"host": [
+						"api",
+						"coingecko",
+						"com"
+					],
+					"path": [
+						"api",
+						"v3",
+						"ping"
+					],
+					"query": [
+						{
+							"key": "CG-bMNG2jRAniPj52tQUTbBoSiC",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Coin Price by IDs",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test case for CoinGecko API /v3/simple/price?ids=solana&vs_currencies=usd",
+							"",
+							"// 1. Check if the status code is 200",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response contains the expected message\", function () {",
+							"    // Get the response body as JSON",
+							"    const responseJson = pm.response.json();",
+							"    ",
+							"    // Extract the 'usd' value from the response",
+							"    const actualValue = responseJson.bitcoin.usd;",
+							"    ",
+							"    // Check if the 'usd' value is a number",
+							"    pm.expect(actualValue).to.be.a('number');",
+							"    ",
+							"    // Define the expected structure as an object",
+							"    const expectedStructure = {",
+							"        \"bitcoin\": {",
+							"            \"usd\": actualValue",
+							"        }",
+							"    };",
+							"    ",
+							"    // Check if the response JSON matches the expected structure",
+							"    pm.expect(responseJson).to.eql(expectedStructure);",
+							"});",
+							"",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.coingecko.com/api/v3/simple/price?CG-bMNG2jRAniPj52tQUTbBoSiC&ids=bitcoin&vs_currencies=usd",
+					"protocol": "https",
+					"host": [
+						"api",
+						"coingecko",
+						"com"
+					],
+					"path": [
+						"api",
+						"v3",
+						"simple",
+						"price"
+					],
+					"query": [
+						{
+							"key": "CG-bMNG2jRAniPj52tQUTbBoSiC",
+							"value": null
+						},
+						{
+							"key": "ids",
+							"value": "bitcoin"
+						},
+						{
+							"key": "vs_currencies",
+							"value": "usd"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Coin List",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Test case script for CoinGecko API /v3/coins/list",
+							"",
+							"// 1. Check if the status code is 200",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// 4. Parse the response body as JSON",
+							"let responseData = pm.response.json();",
+							"",
+							"pm.test(\"Successful response with list of coins\", function () {",
+							"    // Parse the response body as JSON",
+							"    const jsonData = pm.response.json();",
+							"",
+							"    // Check if the response is an array",
+							"    pm.expect(jsonData).to.be.an('array');",
+							"",
+							"    // Check if the first element in the array is an object",
+							"    pm.expect(jsonData[0]).to.be.an('object');",
+							"",
+							"    // Check if the first element has the expected properties",
+							"    pm.expect(jsonData[0]).to.have.all.keys('id', 'symbol', 'name');",
+							"",
+							"    // Loop through the array and check if each element has the expected properties",
+							"    jsonData.forEach(coin => {",
+							"        pm.expect(coin).to.have.all.keys('id', 'symbol', 'name');",
+							"        pm.expect(coin.id).to.be.a('string');",
+							"        pm.expect(coin.symbol).to.be.a('string');",
+							"        pm.expect(coin.name).to.be.a('string');",
+							"    });",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.coingecko.com/api/v3/coins/list?CG-bMNG2jRAniPj52tQUTbBoSiC",
+					"protocol": "https",
+					"host": [
+						"api",
+						"coingecko",
+						"com"
+					],
+					"path": [
+						"api",
+						"v3",
+						"coins",
+						"list"
+					],
+					"query": [
+						{
+							"key": "CG-bMNG2jRAniPj52tQUTbBoSiC",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Coin Market",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Check if the status code is 200",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Successful response of Market data including `id`, `symbol`, `current_price`, etc.\", function () {",
+							"    // Parse the response body as JSON",
+							"    const jsonData = pm.response.json();",
+							"",
+							"    // Check if the response is an array",
+							"    pm.expect(jsonData).to.be.an('array');",
+							"",
+							"    // Check if the first element in the array is an object",
+							"    pm.expect(jsonData[0]).to.be.an('object');",
+							"",
+							"    // Check if the first element has the expected properties",
+							"    pm.expect(jsonData[0]).to.have.all.keys(",
+							"        'id',",
+							"        'symbol',",
+							"        'name',",
+							"        'image',",
+							"        'current_price',",
+							"        'market_cap',",
+							"        'market_cap_rank',",
+							"        'fully_diluted_valuation',",
+							"        'total_volume',",
+							"        'high_24h',",
+							"        'low_24h',",
+							"        'price_change_24h',",
+							"        'price_change_percentage_24h',",
+							"        'market_cap_change_24h',",
+							"        'market_cap_change_percentage_24h',",
+							"        'circulating_supply',",
+							"        'total_supply',",
+							"        'max_supply',",
+							"        'ath',",
+							"        'ath_change_percentage',",
+							"        'ath_date',",
+							"        'atl',",
+							"        'atl_change_percentage',",
+							"        'atl_date',",
+							"        'roi',",
+							"        'last_updated'",
+							"    );",
+							"",
+							"    // Loop through the array and check if each element has the expected properties",
+							"    jsonData.forEach(coin => {",
+							"        pm.expect(coin).to.have.all.keys(",
+							"            'id',",
+							"            'symbol',",
+							"            'name',",
+							"            'image',",
+							"            'current_price',",
+							"            'market_cap',",
+							"            'market_cap_rank',",
+							"            'fully_diluted_valuation',",
+							"            'total_volume',",
+							"            'high_24h',",
+							"            'low_24h',",
+							"            'price_change_24h',",
+							"            'price_change_percentage_24h',",
+							"            'market_cap_change_24h',",
+							"            'market_cap_change_percentage_24h',",
+							"            'circulating_supply',",
+							"            'total_supply',",
+							"            'max_supply',",
+							"            'ath',",
+							"            'ath_change_percentage',",
+							"            'ath_date',",
+							"            'atl',",
+							"            'atl_change_percentage',",
+							"            'atl_date',",
+							"            'roi',",
+							"            'last_updated'",
+							"        );",
+							"        pm.expect(coin.current_price).to.be.a('number');",
+							"    });",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.coingecko.com/api/v3/coins/markets?CG-bMNG2jRAniPj52tQUTbBoSiC&vs_currency=usd",
+					"protocol": "https",
+					"host": [
+						"api",
+						"coingecko",
+						"com"
+					],
+					"path": [
+						"api",
+						"v3",
+						"coins",
+						"markets"
+					],
+					"query": [
+						{
+							"key": "CG-bMNG2jRAniPj52tQUTbBoSiC",
+							"value": null
+						},
+						{
+							"key": "vs_currency",
+							"value": "usd"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Coin data by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Check if the status code is 200",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Response contains the detailed data object for Bitcoin\", function () {",
+							"  ",
+							"    const responseJson = pm.response.json();",
+							"    ",
+							"    const expectedKeys = [",
+							"        \"id\",",
+							"        \"symbol\",",
+							"        \"name\",",
+							"        \"web_slug\",",
+							"        \"asset_platform_id\",",
+							"        \"platforms\",",
+							"        \"detail_platforms\",",
+							"        \"block_time_in_minutes\",",
+							"        \"hashing_algorithm\",",
+							"        \"categories\",",
+							"        \"preview_listing\",",
+							"        \"public_notice\",",
+							"        \"additional_notices\",",
+							"        \"localization\",",
+							"        \"description\",",
+							"        \"links\",",
+							"        \"image\",",
+							"        \"country_origin\",",
+							"        \"genesis_date\",",
+							"        \"sentiment_votes_up_percentage\",",
+							"        \"sentiment_votes_down_percentage\",",
+							"        \"watchlist_portfolio_users\",",
+							"        \"market_cap_rank\",",
+							"        \"market_data\",",
+							"        \"community_data\",",
+							"        \"developer_data\",",
+							"        \"status_updates\",",
+							"        \"last_updated\",",
+							"        \"tickers\"",
+							"    ];",
+							"    ",
+							"    expectedKeys.forEach(key => {",
+							"        pm.expect(responseJson).to.have.property(key);",
+							"    });",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://api.coingecko.com/api/v3/coins/:id?CG-bMNG2jRAniPj52tQUTbBoSiC",
+					"protocol": "https",
+					"host": [
+						"api",
+						"coingecko",
+						"com"
+					],
+					"path": [
+						"api",
+						"v3",
+						"coins",
+						":id"
+					],
+					"query": [
+						{
+							"key": "CG-bMNG2jRAniPj52tQUTbBoSiC",
+							"value": null
+						}
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "bitcoin"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					"// pm.test(\"Status code is 200\", function () {\r",
+					"//     pm.response.to.have.status(200);\r",
+					"// });\r",
+					"\r",
+					"// pm.test(\"Response contains 'ping'\", function (ping) {\r",
+					"//     pm.expect(pm.response.text(`{\"gecko_says\": \"(V3) To the Moon!\"}`)).to.include(\"ping\");\r",
+					"// });\r",
+					"\r",
+					"// pm.test(\"Response contains price information\", function (price) {\r",
+					"//     pm.expect(pm.response.text(`{\"bitcoin\": {\"usd\": value}}`)).to.include(\"price\");\r",
+					"// });\r",
+					"\r",
+					"\r",
+					"\r",
+					"// // 4. Parse the response body as JSON\r",
+					"// let responseData = pm.response.json();\r",
+					"\r",
+					"// // 7. Check if the first object in the array has the expected properties\r",
+					"// pm.test(\"Coin object  has id, symbol, and name properties\", function () {\r",
+					"//     if(responseData.length > 0) {\r",
+					"//         pm.expect(responseData[0]).to.have.property('id');\r",
+					"//         pm.expect(responseData[0]).to.have.property('symbol');\r",
+					"//         pm.expect(responseData[0]).to.have.property('name');\r",
+					"//     } else {\r",
+					"//         // Skip the test if the array is empty (this should not happen if previous tests passed)\r",
+					"//         pm.test.skip(\"Skipping as the array is empty\");\r",
+					"//     }\r",
+					"// });\r",
+					"\r",
+					""
+				]
+			}
+		}
+	]
+}
